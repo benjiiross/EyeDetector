@@ -11,8 +11,12 @@ export default function ImageDropzone() {
     }
 
     setFile((previousFile) => [
-      Object.assign(acceptedFile[0], {
-        preview: URL.createObjectURL(acceptedFile[0]),
+      ...previousFile,
+      ...acceptedFile.map((file) => {
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        });
+        return file;
       }),
     ]);
 
@@ -21,9 +25,11 @@ export default function ImageDropzone() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: ".jpg, .jpeg, .png",
+    accept: {
+      "image/jpeg": [".jpg", ".jpeg"],
+      "image/png": [".png"],
+    },
     maxSize: 6 * 1024 * 1024, // 6MB
-    multiple: false,
   });
 
   return (
@@ -36,10 +42,10 @@ export default function ImageDropzone() {
         <div className="flex items-center justify-center">
           <DownloadIcon />
           {isDragActive ? (
-            <p className="ml-2">Drop the file here ...</p>
+            <p className="ml-2">Drop the files here ...</p>
           ) : (
             <p className="ml-2">
-              Drag & drop a file here, or click to select a file
+              Drag & drop some files here, or click to select files
             </p>
           )}
         </div>
