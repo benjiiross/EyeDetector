@@ -10,9 +10,9 @@ from azure.cognitiveservices.vision.customvision.training.models import (
     Region,
 )
 from msrest.authentication import ApiKeyCredentials
-import os, time, uuid
-
 from dotenv import load_dotenv
+import os, time, uuid, csv
+
 
 load_dotenv()
 
@@ -102,12 +102,6 @@ time.sleep(1)
 HPED_tag = trainer.create_tag(project.id, "HPED")
 CL_tag = trainer.create_tag(project.id, "CL")
 
-import os
-import csv
-from azure.cognitiveservices.vision.customvision.training.models import ImageFileCreateEntry
-from msrest.authentication import ApiKeyCredentials
-from azure.cognitiveservices.vision.customvision.training import CustomVisionTrainingClient
-
 # Chemin vers le dossier contenant les images
 base_image_location = os.path.join(os.path.dirname(__file__), "Training")
 
@@ -127,8 +121,8 @@ trainer = CustomVisionTrainingClient(ENDPOINT, credentials)
 
 # Lire le fichier CSV et associer les tags aux images
 with open(csv_file_path, "r") as csv_file:
-    csv_reader = csv.DictReader(csv_file, delimiter='\t')
-    
+    csv_reader = csv.DictReader(csv_file, delimiter="\t")
+
     for row in csv_reader:
         image_id = row["ID"]
         image_filename = f"{image_id}.jpg"  # Nom de fichier correspondant à l'ID
@@ -148,10 +142,14 @@ with open(csv_file_path, "r") as csv_file:
             image_entry = ImageFileCreateEntry(
                 name=image_filename,
                 contents=image_contents.read(),
-                tag_ids=[tag.id for tag in trainer.get_tags(project_id) if tag.name in tags]
+                tag_ids=[
+                    tag.id for tag in trainer.get_tags(project_id) if tag.name in tags
+                ],
             )
             time.sleep(0.5)
             # Ajouter l'image au projet
-            trainer.create_images_from_data(project_id, ImageFileCreateBatch([image_entry]))
+            trainer.create_images_from_data(
+                project_id, ImageFileCreateBatch([image_entry])
+            )
 
 print("Images ajoutées avec les tags correspondants.")
