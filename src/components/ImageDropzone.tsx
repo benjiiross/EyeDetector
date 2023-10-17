@@ -3,8 +3,12 @@ import DownloadIcon from "./DownloadIcon";
 import { useCallback } from "react";
 import { useState } from "react";
 
+interface CustomFile extends File {
+  preview: string;
+}
+
 export default function ImageDropzone() {
-  const [file, setFile] = useState<File[]>([]);
+  const [file, setFile] = useState<CustomFile[]>([]);
   const onDrop = useCallback((acceptedFile: File[]) => {
     if (acceptedFile?.length === 0) {
       return;
@@ -13,10 +17,11 @@ export default function ImageDropzone() {
     setFile((previousFile) => [
       ...previousFile,
       ...acceptedFile.map((file) => {
-        Object.assign(file, {
+        const customFile = file as CustomFile;
+        Object.assign(customFile, {
           preview: URL.createObjectURL(file),
         });
-        return file;
+        return customFile;
       }),
     ]);
 
