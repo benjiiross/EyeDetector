@@ -4,14 +4,9 @@ from azure.cognitiveservices.vision.customvision.training import (
 from azure.cognitiveservices.vision.customvision.prediction import (
     CustomVisionPredictionClient,
 )
-from azure.cognitiveservices.vision.customvision.training.models import (
-    ImageFileCreateBatch,
-    ImageFileCreateEntry,
-    Region,
-)
 from msrest.authentication import ApiKeyCredentials
 from dotenv import load_dotenv
-import os, time, uuid, csv
+import os, time, uuid
 
 
 load_dotenv()
@@ -38,6 +33,7 @@ project_name = uuid.uuid4()
 project = trainer.get_project(project_id="1f803d80-78d5-4291-b386-89353c0ce67f")
 
 tags = trainer.get_tags(project.id)
+
 for tag in tags:
     trainer.delete_tag(project.id, tag.id)
     print(f"Deleted tag {tag.name}")
@@ -52,6 +48,7 @@ MYA_tag = trainer.create_tag(project.id, "MYA")
 BRVO_tag = trainer.create_tag(project.id, "BRVO")
 TSLN_tag = trainer.create_tag(project.id, "TSLN")
 ERM_tag = trainer.create_tag(project.id, "ERM")
+print("Added tags 1/6")
 time.sleep(1)
 
 LS_tag = trainer.create_tag(project.id, "LS")
@@ -61,6 +58,7 @@ ODC_tag = trainer.create_tag(project.id, "ODC")
 CRVO_tag = trainer.create_tag(project.id, "CRVO")
 TV_tag = trainer.create_tag(project.id, "TV")
 AH_tag = trainer.create_tag(project.id, "AH")
+print("Added tags 2/6")
 time.sleep(1)
 
 ODP_tag = trainer.create_tag(project.id, "ODP")
@@ -70,6 +68,7 @@ AION_tag = trainer.create_tag(project.id, "AION")
 PT_tag = trainer.create_tag(project.id, "PT")
 RT_tag = trainer.create_tag(project.id, "RT")
 RS_tag = trainer.create_tag(project.id, "RS")
+print("Added tags 3/6")
 time.sleep(1)
 
 CRS_tag = trainer.create_tag(project.id, "CRS")
@@ -79,6 +78,7 @@ MHL_tag = trainer.create_tag(project.id, "MHL")
 RP_tag = trainer.create_tag(project.id, "RP")
 CWS_tag = trainer.create_tag(project.id, "CWS")
 CB_tag = trainer.create_tag(project.id, "CB")
+print("Added tags 4/6")
 time.sleep(1)
 
 ODPM_tag = trainer.create_tag(project.id, "ODPM")
@@ -88,6 +88,7 @@ HR_tag = trainer.create_tag(project.id, "HR")
 CRAO_tag = trainer.create_tag(project.id, "CRAO")
 TD_tag = trainer.create_tag(project.id, "TD")
 CME_tag = trainer.create_tag(project.id, "CME")
+print("Added tags 5/6")
 time.sleep(1)
 
 PTCR_tag = trainer.create_tag(project.id, "PTCR")
@@ -102,54 +103,4 @@ time.sleep(1)
 HPED_tag = trainer.create_tag(project.id, "HPED")
 CL_tag = trainer.create_tag(project.id, "CL")
 
-# Chemin vers le dossier contenant les images
-base_image_location = os.path.join(os.path.dirname(__file__), "Training")
-
-# Chemin vers le fichier CSV contenant les informations de tag
-csv_file_path = "RFMiD_Training_Labels.csv"
-
-# ID du projet Custom Vision
-project_id = "1f803d80-78d5-4291-b386-89353c0ce67f"
-
-# Charger les informations d'identification
-ENDPOINT = os.environ["VISION_TRAINING_ENDPOINT"]
-training_key = os.environ["VISION_TRAINING_KEY"]
-credentials = ApiKeyCredentials(in_headers={"Training-key": training_key})
-
-# Créer une instance du client Custom Vision Training
-trainer = CustomVisionTrainingClient(ENDPOINT, credentials)
-
-# Lire le fichier CSV et associer les tags aux images
-with open(csv_file_path, "r") as csv_file:
-    csv_reader = csv.DictReader(csv_file, delimiter="\t")
-
-    for row in csv_reader:
-        image_id = row["ID"]
-        image_filename = f"{image_id}.jpg"  # Nom de fichier correspondant à l'ID
-        time.sleep(0.5)
-        # Vérifier si le fichier image existe
-        image_path = os.path.join(base_image_location, image_filename)
-        if not os.path.exists(image_path):
-            print(f"Image not found: {image_filename}")
-            continue
-
-        # Créer une liste de tags en fonction des données du fichier CSV
-        tags = [tag for tag, value in row.items() if value == "1"]
-
-        # Charger le contenu de l'image
-        with open(image_path, "rb") as image_contents:
-            # Créer une entrée pour l'image avec les tags correspondants
-            image_entry = ImageFileCreateEntry(
-                name=image_filename,
-                contents=image_contents.read(),
-                tag_ids=[
-                    tag.id for tag in trainer.get_tags(project_id) if tag.name in tags
-                ],
-            )
-            time.sleep(0.5)
-            # Ajouter l'image au projet
-            trainer.create_images_from_data(
-                project_id, ImageFileCreateBatch([image_entry])
-            )
-
-print("Images ajoutées avec les tags correspondants.")
+print("Tags created")

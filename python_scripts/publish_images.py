@@ -11,7 +11,9 @@ from azure.cognitiveservices.vision.customvision.training.models import (
 )
 from msrest.authentication import ApiKeyCredentials
 from dotenv import load_dotenv
-import os, time, uuid, csv
+import pandas as pd
+import os
+from msrest.exceptions import HttpOperationError
 
 
 load_dotenv()
@@ -34,122 +36,64 @@ credentials = ApiKeyCredentials(in_headers={"Training-key": training_key})
 trainer = CustomVisionTrainingClient(ENDPOINT, credentials)
 
 print("Importing project...")
-project_name = uuid.uuid4()
 project = trainer.get_project(project_id="1f803d80-78d5-4291-b386-89353c0ce67f")
 
-tags = trainer.get_tags(project.id)
-for tag in tags:
-    trainer.delete_tag(project.id, tag.id)
-    print(f"Deleted tag {tag.name}")
-    time.sleep(0.25)
+# read in the csv file
+df = pd.read_csv("RFMiD_Training_Labels.csv")
 
-Disease_Risk_tag = trainer.create_tag(project.id, "Disease_Risk")
-DR_tag = trainer.create_tag(project.id, "DR")
-ARMD_tag = trainer.create_tag(project.id, "ARMD")
-MH_tag = trainer.create_tag(project.id, "MH")
-DN_tag = trainer.create_tag(project.id, "DN")
-MYA_tag = trainer.create_tag(project.id, "MYA")
-BRVO_tag = trainer.create_tag(project.id, "BRVO")
-TSLN_tag = trainer.create_tag(project.id, "TSLN")
-ERM_tag = trainer.create_tag(project.id, "ERM")
-time.sleep(1)
+# create a list of the image IDs
+image_ids = df["ID"].tolist()
 
-LS_tag = trainer.create_tag(project.id, "LS")
-MS_tag = trainer.create_tag(project.id, "MS")
-CSR_tag = trainer.create_tag(project.id, "CSR")
-ODC_tag = trainer.create_tag(project.id, "ODC")
-CRVO_tag = trainer.create_tag(project.id, "CRVO")
-TV_tag = trainer.create_tag(project.id, "TV")
-AH_tag = trainer.create_tag(project.id, "AH")
-time.sleep(1)
+# create a list of the tags
+tags = df.columns.tolist()
+tags.remove("ID")
 
-ODP_tag = trainer.create_tag(project.id, "ODP")
-ODE_tag = trainer.create_tag(project.id, "ODE")
-ST_tag = trainer.create_tag(project.id, "ST")
-AION_tag = trainer.create_tag(project.id, "AION")
-PT_tag = trainer.create_tag(project.id, "PT")
-RT_tag = trainer.create_tag(project.id, "RT")
-RS_tag = trainer.create_tag(project.id, "RS")
-time.sleep(1)
+base_image_location = os.path.join(os.getcwd(), "images")
 
-CRS_tag = trainer.create_tag(project.id, "CRS")
-EDN_tag = trainer.create_tag(project.id, "EDN")
-RPEC_tag = trainer.create_tag(project.id, "RPEC")
-MHL_tag = trainer.create_tag(project.id, "MHL")
-RP_tag = trainer.create_tag(project.id, "RP")
-CWS_tag = trainer.create_tag(project.id, "CWS")
-CB_tag = trainer.create_tag(project.id, "CB")
-time.sleep(1)
+print("Adding images...")
 
-ODPM_tag = trainer.create_tag(project.id, "ODPM")
-PRH_tag = trainer.create_tag(project.id, "PRH")
-MNF_tag = trainer.create_tag(project.id, "MNF")
-HR_tag = trainer.create_tag(project.id, "HR")
-CRAO_tag = trainer.create_tag(project.id, "CRAO")
-TD_tag = trainer.create_tag(project.id, "TD")
-CME_tag = trainer.create_tag(project.id, "CME")
-time.sleep(1)
+# go through each image and add it to the project
+image_list = []
+for image_id in image_ids:
+    file_name = f"{str(image_id)}.png"  # Adjust the file extension as needed
+    # Assuming your CSV contains the tag IDs in the same order as 'tags' list
+    tag_ids = [
+        tag_id
+        for tag_id, tag_value in zip(tags, df.iloc[image_id - 1].tolist()[1:])
+        if tag_value == 1
+    ]
 
-PTCR_tag = trainer.create_tag(project.id, "PTCR")
-CF_tag = trainer.create_tag(project.id, "CF")
-VH_tag = trainer.create_tag(project.id, "VH")
-MCA_tag = trainer.create_tag(project.id, "MCA")
-VS_tag = trainer.create_tag(project.id, "VS")
-BRAO_tag = trainer.create_tag(project.id, "BRAO")
-PLQ_tag = trainer.create_tag(project.id, "PLQ")
-time.sleep(1)
+    # Construct the full path to the image file
+    image_path = os.path.join(base_image_location, file_name)
 
-HPED_tag = trainer.create_tag(project.id, "HPED")
-CL_tag = trainer.create_tag(project.id, "CL")
-
-# Chemin vers le dossier contenant les images
-base_image_location = os.path.join(os.path.dirname(__file__), "Training")
-
-# Chemin vers le fichier CSV contenant les informations de tag
-csv_file_path = "RFMiD_Training_Labels.csv"
-
-# ID du projet Custom Vision
-project_id = "1f803d80-78d5-4291-b386-89353c0ce67f"
-
-# Charger les informations d'identification
-ENDPOINT = os.environ["VISION_TRAINING_ENDPOINT"]
-training_key = os.environ["VISION_TRAINING_KEY"]
-credentials = ApiKeyCredentials(in_headers={"Training-key": training_key})
-
-# Créer une instance du client Custom Vision Training
-trainer = CustomVisionTrainingClient(ENDPOINT, credentials)
-
-# Lire le fichier CSV et associer les tags aux images
-with open(csv_file_path, "r") as csv_file:
-    csv_reader = csv.DictReader(csv_file, delimiter="\t")
-
-    for row in csv_reader:
-        image_id = row["ID"]
-        image_filename = f"{image_id}.jpg"  # Nom de fichier correspondant à l'ID
-        time.sleep(0.5)
-        # Vérifier si le fichier image existe
-        image_path = os.path.join(base_image_location, image_filename)
-        if not os.path.exists(image_path):
-            print(f"Image not found: {image_filename}")
-            continue
-
-        # Créer une liste de tags en fonction des données du fichier CSV
-        tags = [tag for tag, value in row.items() if value == "1"]
-
-        # Charger le contenu de l'image
+    # Check if the image file exists before adding it
+    if os.path.exists(image_path):
         with open(image_path, "rb") as image_contents:
-            # Créer une entrée pour l'image avec les tags correspondants
-            image_entry = ImageFileCreateEntry(
-                name=image_filename,
-                contents=image_contents.read(),
-                tag_ids=[
-                    tag.id for tag in trainer.get_tags(project_id) if tag.name in tags
-                ],
+            image_list.append(
+                ImageFileCreateEntry(
+                    name=file_name,
+                    contents=bytearray(image_contents.read()),
+                    tag_ids=tag_ids,
+                )
             )
-            time.sleep(0.5)
-            # Ajouter l'image au projet
-            trainer.create_images_from_data(
-                project_id, ImageFileCreateBatch([image_entry])
-            )
+    else:
+        print(f"Image file not found: {image_path}")
 
-print("Images ajoutées avec les tags correspondants.")
+print("Uploading images...")
+for i in range(0, len(image_list), 64):
+    print(f"Uploading batch {i // 64 + 1}...")
+    batch = image_list[i : i + 64]
+    try:
+        upload_result = trainer.create_images_from_files(
+            project.id, ImageFileCreateBatch(images=batch)
+        )
+    except HttpOperationError as e:
+        print(e.response.text)
+        exit(-1)
+
+
+if not upload_result.is_batch_successful:
+    print("Image batch upload failed.")
+    for image in upload_result.images:
+        print("Image status: ", image.status)
+    exit(-1)
