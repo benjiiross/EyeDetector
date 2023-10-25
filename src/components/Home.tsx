@@ -6,7 +6,8 @@ export default function Home() {
     <div
       className="text-center p-10 h-screen w-screen"
       style={{
-        backgroundImage: "url('/background.jpg')",
+        backgroundImage:
+          "url(https://github.com/benjiiross/EyeDetector/blob/main/public/background.jpg?raw=true)",
         backgroundSize: "cover",
       }}
     >
