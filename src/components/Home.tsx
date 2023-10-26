@@ -18,7 +18,7 @@ export default function Home() {
 
       <h1 className="text-4xl font-bold">Upload an eye image here</h1>
       <h2 className="text-xl font-semibold mt-2 text-gray-500">
-        Supported formats are .jpg, .jpeg, .png
+        Supported formats are .jpg, .jpeg, .png, max 4MB
       </h2>
 
       <div className="mt-5">

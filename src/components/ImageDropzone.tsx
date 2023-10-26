@@ -32,10 +32,10 @@ export default function ImageDropzone() {
       "image/jpeg": [".jpg", ".jpeg"],
       "image/png": [".png"],
     },
-    maxSize: 6 * 1024 * 1024,
+    maxSize: 4 * 1024 * 1024,
     multiple: false,
     onDropRejected: () => {
-      alert("Please upload an image file with max size of 6MB");
+      alert("Please upload an image file with max size of 4MB.");
     },
   });
 
@@ -57,7 +57,7 @@ export default function ImageDropzone() {
     );
 
     const data = await response.json();
-    console.log(data);
+
     setApiResponse(data.predictions);
     setIsLoading(false);
     setIsOpen(true);

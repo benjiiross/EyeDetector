@@ -6,13 +6,11 @@ from azure.cognitiveservices.vision.customvision.training.models import (
     ImageFileCreateEntry,
 )
 from msrest.authentication import ApiKeyCredentials
+from msrest.exceptions import HttpOperationError
 from dotenv import load_dotenv
 import pandas as pd
 import os
-from msrest.exceptions import HttpOperationError
 
-
-print("Loading environment variables...")
 load_dotenv()
 
 ENDPOINT = os.environ["VISION_TRAINING_ENDPOINT"]
