@@ -4,7 +4,7 @@
 
 _A Machine Learning project_
 
-This project was made by [Julie Chen](https://github.com/juliele1), [Arthur Gagniare](https://github.com/AGagniare) and [Benjamin Rossignol](https://github.com/benjiiross). Its aim is to
+This project was made by [Julie Chen](https://github.com/juliele1), [Arthur Gagniare](https://github.com/AGagniare) and [Benjamin Rossignol](https://github.com/benjiiross). Its aim is to detect if an image contains eyes cancer or not.
 
 The website is currently hosted on [Github Pages](https://benjiiross.github.io/EyeDetector/).
 
