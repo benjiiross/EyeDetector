@@ -16,12 +16,12 @@ export default function Home() {
         <h2 className="text-2xl font-semibold">EyeDetector</h2>
       </div>
 
-      <h1 className="text-4xl font-bold mt-10">Upload an eye image here</h1>
+      <h1 className="text-4xl font-bold">Upload an eye image here</h1>
       <h2 className="text-xl font-semibold mt-2 text-gray-500">
         Supported formats are .jpg, .jpeg, .png
       </h2>
 
-      <div className="mt-10">
+      <div className="mt-5">
         <ImageDropzone />
       </div>
     </div>
