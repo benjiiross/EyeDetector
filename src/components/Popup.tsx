@@ -18,56 +18,46 @@ const diseaseDict = {
     name: "Diabetic Retinopathy",
     description:
       "Diabetic retinopathy is a diabetes complication that affects eyes. It's caused by damage to the blood vessels of the light-sensitive tissue at the back of the eye (retina).",
-    link: "https://www.mayoclinic.org/diseases-conditions/diabetic-retinopathy/symptoms-causes/syc-20371611",
   },
   MH: {
     name: "Age-related Macular Degeneration",
     description:
       "Age-related macular degeneration (AMD) is an eye disease that may get worse over time. It’s the leading cause of severe, permanent vision loss in people over age 60. It happens when the small central portion of your retina, called the macula, wears down.",
-    link: "https://www.healthline.com/health/macular-degeneration",
   },
   ODC: {
     name: "Optic Disc Coloboma",
     description:
       "Optic disc coloboma is a congenital abnormality of the optic disc that is caused by failure of closure of the embryonic fissure.",
-    link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3464689/",
   },
   TSLN: {
     name: "Tilted Optic Disc",
     description: "A congenital abnormality of the optic disc.",
-    link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3464689/",
   },
   DN: {
     name: "Dysplastic Nerve",
     description: "A congenital abnormality of the optic disc.",
-    link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3464689/",
   },
   MYA: {
     name: "Myelinated Nerve",
     description: "A congenital abnormality of the optic disc.",
-    link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3464689/",
   },
   ARMD: {
     name: "Age-related Macular Degeneration",
     description:
       "Age-related macular degeneration (AMD) is an eye disease that may get worse over time. It’s the leading cause of severe, permanent vision loss in people over age 60. It happens when the small central portion of your retina, called the macula, wears down.",
-    link: "https://www.healthline.com/health/macular-degeneration",
   },
   BRVO: {
     name: "Branch Retinal Vein Occlusion",
     description:
       "A blockage of the small veins that carry blood away from the retina.",
-    link: "https://www.mayoclinic.org/diseases-conditions/retinal-vein-occlusion/symptoms-causes/syc-20354935",
   },
   ODP: {
     name: "Optic Disc Pit",
     description: "A congenital abnormality of the optic disc.",
-    link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3464689/",
   },
   ODE: {
     name: "Optic Disc Edema",
     description: "A congenital abnormality of the optic disc.",
-    link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3464689/",
   },
 };
 
@@ -140,8 +130,8 @@ export default function Popup({ apiResponse, handleClose }: PopupProps) {
                         diseaseDict[
                           disease.disease_type as keyof typeof diseaseDict
                         ].name
-                      }{" "}
-                      at a probability of{" "}
+                      }
+                      &nbsp; at a probability of&nbsp;
                       {Number(
                         (
                           apiResponse.find(
@@ -173,17 +163,7 @@ export default function Popup({ apiResponse, handleClose }: PopupProps) {
                       className="text-base font-semibold leading-6 text-gray-900"
                       id="modal-title"
                     >
-                      Result from EyeDetector : You are not at risk of any
-                      disease at a probability of{" "}
-                      {Number(
-                        (
-                          apiResponse.find(
-                            (tag) => tag.tagName === "No_Disease"
-                          )?.probability ?? 0
-                        ).toFixed(2)
-                      ) *
-                        100 +
-                        "%"}
+                      Result from EyeDetector : You don't have any disease
                     </h3>
 
                     <div className="mt-2">
