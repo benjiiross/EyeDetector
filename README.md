@@ -1,27 +1,58 @@
-# React + TypeScript + Vite
+# EyeDetector
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![EyeDetector](https://github.com/benjiiross/EyeDetector/blob/main/public/background.jpg?raw=true)
 
-Currently, two official plugins are available:
+_A Machine Learning project_
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was made by [Julie Chen](https://github.com/juliele1), [Arthur Gagniare](https://github.com/AGagniare) and [Benjamin Rossignol](https://github.com/benjiiross). Its aim is to
 
-## Expanding the ESLint configuration
+The website is currently hosted on [Github Pages](https://benjiiross.github.io/EyeDetector/).
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Getting Started
 
-- Configure the top-level `parserOptions` property like this:
+You can download the project and run it locally using the following commands:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```bash
+git clone https://github.com/benjiiross/EyeDetector.git
+cd EyeDetector
+conda create -y -n eyedetector
+conda activate eyedetector
+conda install -y python=3.8
+python -m pip install -r requirements.txt
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Machine Learning
+
+To run this project, you will need first to create a new project on [Azure Custom Vision](https://customvision.ai/).
+
+Then, you will need to create a .env file at the root of the project with the following variables:
+
+```
+VISION_TRAINING_KEY
+VISION_TRAINING_ENDPOINT
+VISION_PREDICTION_KEY
+VISION_PREDICTION_RESOURCE_ID
+VISION_PROJECT_ID
+VITE_PREDICTION_ENDPOINT
+```
+
+You will also need to copy the training photos in the root of the project in a folder named `images` (private data, not included in the repository)
+
+Then, you can run the following command to interract with the project:
+
+```bash
+# to add the tags to azure
+python python_scripts/create_tags.py
+
+# to publish the images to azure
+python python_scripts/publish_images.py
+```
+
+## Website
+
+To run the website locally, you can run the following commands in the root of the project. Make sure you have installed NodeJS and NPM.
+
+```bash
+npm install
+npm run dev
+```

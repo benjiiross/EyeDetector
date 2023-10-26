@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import ErrorIcon from "./ErrorIcon";
-import InfoIcon from "./InfoIcon";
-import WarningIcon from "./WarningIcon";
+import ErrorIcon from "./icons/ErrorIcon";
+import InfoIcon from "./icons/InfoIcon";
+import WarningIcon from "./icons/WarningIcon";
 
 interface PopupProps {
   apiResponse: Array<{ tagId: string; tagName: string; probability: number }>;

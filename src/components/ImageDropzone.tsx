@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import DownloadIcon from "./DownloadIcon";
+import DownloadIcon from "./icons/DownloadIcon";
 import Popup from "./Popup";
 
 interface CustomFile extends File {
@@ -35,7 +35,7 @@ export default function ImageDropzone() {
     maxSize: 4 * 1024 * 1024,
     multiple: false,
     onDropRejected: () => {
-      alert("Please upload an image file with max size of 4MB.");
+      alert("Please upload an image file (jpg or png) smaller than 4MB");
     },
   });
 

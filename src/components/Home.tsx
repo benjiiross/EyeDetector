@@ -1,5 +1,5 @@
 import ImageDropzone from "./ImageDropzone";
-import EyeIcon from "./EyeIcon";
+import EyeIcon from "./icons/EyeIcon";
 
 export default function Home() {
   return (
